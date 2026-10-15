@@ -1,0 +1,16 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:views="using:Algorithm_lab2.Views"
+        x:Class="Algorithm_lab2.Views.MainWindow"
+        Title="Лабораторная работа №2 — Рекурсивные алгоритмы"
+        Width="1200" Height="800" MinWidth="900" MinHeight="600"
+        WindowStartupLocation="CenterScreen">
+    <TabControl Margin="8,4,8,8">
+        <TabItem Header="Фракталы">
+            <views:FractalView />
+        </TabItem>
+        <TabItem Header="Ханойская башня">
+            <views:HanoiView />
+        </TabItem>
+    </TabControl>
+</Window>
