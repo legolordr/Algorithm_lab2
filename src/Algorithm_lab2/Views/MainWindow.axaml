@@ -12,5 +12,8 @@
         <TabItem Header="Ханойская башня">
             <views:HanoiView />
         </TabItem>
+        <TabItem Header="Рекурсивная заливка">
+            <views:FloodFillView />
+        </TabItem>
     </TabControl>
 </Window>
