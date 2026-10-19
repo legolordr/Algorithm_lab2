@@ -15,5 +15,8 @@
         <TabItem Header="Рекурсивная заливка">
             <views:FloodFillView />
         </TabItem>
+        <TabItem Header="Генератор лабиринта">
+            <views:MazeView />
+        </TabItem>
     </TabControl>
 </Window>
