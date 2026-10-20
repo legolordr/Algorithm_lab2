@@ -1,0 +1,76 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:Algorithm_lab2.Controls"
+             x:Class="Algorithm_lab2.Views.MergeSortView">
+    <Grid ColumnDefinitions="300,*">
+        <ScrollViewer>
+            <StackPanel Margin="8,12,16,12" Spacing="10">
+                <TextBlock Text="Сортировка слиянием" FontWeight="SemiBold" FontSize="16" />
+                <TextBlock TextWrapping="Wrap" Opacity="0.75"
+                           Text="Массив делится пополам, каждая половина сортируется рекурсивно, затем две отсортированные половины сливаются в одну." />
+
+                <TextBlock Text="Размер массива" FontWeight="SemiBold" Margin="0,8,0,0" />
+                <NumericUpDown x:Name="SizeInput" Minimum="2" Maximum="16" Value="8" Increment="1"
+                               FormatString="0" />
+
+                <TextBlock Text="Исходные данные" FontWeight="SemiBold" Margin="0,4,0,0" />
+                <ComboBox x:Name="OrderInput" SelectedIndex="0" HorizontalAlignment="Stretch">
+                    <ComboBoxItem Content="Случайный порядок" />
+                    <ComboBoxItem Content="Обратный порядок" />
+                    <ComboBoxItem Content="Почти отсортирован" />
+                </ComboBox>
+
+                <TextBlock x:Name="SpeedLabel" FontWeight="SemiBold" Margin="0,4,0,0" />
+                <Slider x:Name="SpeedSlider" Minimum="1" Maximum="30" Value="3" />
+
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button x:Name="PlayButton" Content="Старт" MinWidth="80" Classes="accent" />
+                    <Button x:Name="StepButton" Content="Шаг" />
+                    <Button x:Name="ShuffleButton" Content="Новый массив" />
+                </StackPanel>
+
+                <Border Background="#1AFFFFFF" CornerRadius="6" Padding="12">
+                    <StackPanel Spacing="4">
+                        <TextBlock x:Name="ProgressText" FontWeight="SemiBold" />
+                        <TextBlock x:Name="CurrentText" TextWrapping="Wrap" />
+                    </StackPanel>
+                </Border>
+
+                <Border Background="#1AFFFFFF" CornerRadius="6" Padding="12">
+                    <StackPanel Spacing="4">
+                        <TextBlock x:Name="CallsText" />
+                        <TextBlock x:Name="DepthText" />
+                        <TextBlock x:Name="ComparisonsText" />
+                        <TextBlock x:Name="WritesText" />
+                    </StackPanel>
+                </Border>
+
+                <StackPanel Spacing="4" Margin="0,4,0,0">
+                    <TextBlock Text="Обозначения" FontWeight="SemiBold" />
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <Border Width="12" Height="12" CornerRadius="2" BorderBrush="#4FC3F7" BorderThickness="2" />
+                        <TextBlock Text="текущий вызов" FontSize="12" />
+                        <Border Width="12" Height="12" CornerRadius="2" BorderBrush="#804FC3F7" BorderThickness="1"
+                                Margin="8,0,0,0" />
+                        <TextBlock Text="ждёт в стеке" FontSize="12" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <Border Width="12" Height="12" CornerRadius="2" Background="#FFD54F" />
+                        <TextBlock Text="сравнение" FontSize="12" />
+                        <Border Width="12" Height="12" CornerRadius="2" Background="#FF8A65" Margin="8,0,0,0" />
+                        <TextBlock Text="в результат" FontSize="12" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <Border Width="12" Height="12" CornerRadius="2" Background="#1E3A2B" BorderBrush="#81C784"
+                                BorderThickness="1" />
+                        <TextBlock Text="отсортированный отрезок" FontSize="12" />
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Border Grid.Column="1" Margin="0,12,0,0" CornerRadius="8" Background="#0F141A" ClipToBounds="True">
+            <controls:MergeTreeCanvas x:Name="Tree" Margin="16" />
+        </Border>
+    </Grid>
+</UserControl>

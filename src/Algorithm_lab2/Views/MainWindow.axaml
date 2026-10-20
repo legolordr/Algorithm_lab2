@@ -12,5 +12,8 @@
         <TabItem Header="Ханойская башня">
             <views:HanoiView />
         </TabItem>
+        <TabItem Header="Сортировка слиянием">
+            <views:MergeSortView />
+        </TabItem>
     </TabControl>
 </Window>
