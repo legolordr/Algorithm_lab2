@@ -18,5 +18,8 @@
         <TabItem Header="Генератор лабиринта">
             <views:MazeView />
         </TabItem>
+        <TabItem Header="Сортировка слиянием">
+            <views:MergeSortView />
+        </TabItem>
     </TabControl>
 </Window>
