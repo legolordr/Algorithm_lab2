@@ -1,0 +1,84 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:Algorithm_lab2.Controls"
+             xmlns:scottplot="using:ScottPlot.Avalonia"
+             xmlns:benchmarks="using:Algorithm_lab2.Benchmarks"
+             x:Class="Algorithm_lab2.Views.BenchmarkView">
+    <Grid RowDefinitions="Auto,*" ColumnDefinitions="300,*" Margin="24,20,24,24">
+        <StackPanel Grid.ColumnSpan="2" Spacing="4" Margin="0,0,0,20">
+            <TextBlock Classes="h1" Text="Замеры времени" />
+            <TextBlock Classes="subtitle"
+                       Text="Время работы каждого алгоритма в зависимости от размера входа и его сравнение с теоретической сложностью: по точкам методом наименьших квадратов подбирается C в t(n) ≈ C·f(n)." />
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="1">
+            <StackPanel Spacing="12" Margin="0,0,14,0">
+                <Border Classes="card">
+                    <StackPanel Spacing="12">
+                        <TextBlock Classes="section" Text="ПАРАМЕТРЫ" />
+                        <StackPanel Spacing="6">
+                            <TextBlock Classes="label" Text="Алгоритм" />
+                            <ListBox x:Name="AlgorithmList" AutomationProperties.Name="Алгоритм">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate x:DataType="benchmarks:BenchmarkCase">
+                                        <TextBlock Text="{Binding Name}" />
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <Border Classes="card">
+                    <StackPanel Spacing="8">
+                        <Button x:Name="RunButton" Content="Запустить замер" Classes="accent wide" ToolTip.Tip="Пробел" />
+                        <Button x:Name="RunAllButton" Content="Замерить все алгоритмы" Classes="wide" />
+                    </StackPanel>
+                </Border>
+
+                <Border Classes="card">
+                    <StackPanel Spacing="8">
+                        <TextBlock Classes="section" Text="СОСТОЯНИЕ" />
+                        <ProgressBar x:Name="Progress" Maximum="1" />
+                        <TextBlock x:Name="StatusText" Classes="status" />
+                    </StackPanel>
+                </Border>
+
+                <Border Classes="card">
+                    <StackPanel Spacing="8">
+                        <TextBlock Classes="section" Text="РЕЗУЛЬТАТ" />
+                        <controls:StatRow x:Name="ComplexityStat" Label="Сложность" />
+                        <controls:StatRow x:Name="ConstantStat" Label="Коэффициент C" />
+                        <controls:StatRow x:Name="MseStat" Label="MSE подгонки" />
+                        <controls:StatRow x:Name="MaxTimeStat" Label="Максимальное время" />
+                    </StackPanel>
+                </Border>
+
+                <Border Classes="card">
+                    <StackPanel Spacing="8">
+                        <TextBlock Classes="section" Text="ДАННЫЕ" />
+                        <TextBlock x:Name="DataHint" Classes="hint" Text="Замеров пока нет." />
+                        <ItemsControl x:Name="DataList">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Spacing="6" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Border Grid.Row="1" Grid.Column="1" Classes="canvas">
+            <Panel Margin="12">
+                <scottplot:AvaPlot x:Name="Chart" AutomationProperties.Name="График времени выполнения" />
+                <TextBlock x:Name="EmptyText" Classes="subtitle" HorizontalAlignment="Center" VerticalAlignment="Center"
+                           TextAlignment="Center" Text="Нажмите «Запустить замер», чтобы построить график." />
+                <!-- The chart zooms with the wheel and pans with the mouse; this brings back the whole data. -->
+                <Button x:Name="ResetZoomButton" Content="Сбросить масштаб" HorizontalAlignment="Right"
+                        VerticalAlignment="Top" Margin="0,4,4,0" IsVisible="False" ToolTip.Tip="0" />
+            </Panel>
+        </Border>
+    </Grid>
+</UserControl>

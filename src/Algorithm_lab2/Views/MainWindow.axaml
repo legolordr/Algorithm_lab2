@@ -18,7 +18,7 @@
 
                 <StackPanel DockPanel.Dock="Bottom" Margin="8,16,8,0" Spacing="8">
                     <TextBlock Text="ГОРЯЧИЕ КЛАВИШИ" Classes="section" />
-                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnSpacing="10"
+                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" ColumnSpacing="10"
                           RowSpacing="6">
                         <Border Classes="kbd"><TextBlock Text="Пробел" /></Border>
                         <TextBlock Grid.Column="1" Text="старт / пауза" Classes="hint" VerticalAlignment="Center" />
@@ -32,6 +32,9 @@
                                    VerticalAlignment="Center" />
                         <Border Grid.Row="4" Classes="kbd"><TextBlock Text="N" /></Border>
                         <TextBlock Grid.Row="4" Grid.Column="1" Text="новые данные" Classes="hint"
+                                   VerticalAlignment="Center" />
+                        <Border Grid.Row="5" Classes="kbd"><TextBlock Text="0" /></Border>
+                        <TextBlock Grid.Row="5" Grid.Column="1" Text="сброс масштаба" Classes="hint"
                                    VerticalAlignment="Center" />
                     </Grid>
                 </StackPanel>
@@ -72,6 +75,13 @@
                             <TextBlock Text="Сортировка слиянием" VerticalAlignment="Center" />
                         </StackPanel>
                     </ListBoxItem>
+                    <ListBoxItem>
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <PathIcon Width="16" Height="16"
+                                      Data="M1,14 H15 V15.5 H1 Z M1,1 H2.5 V14 H1 Z M3.5,11.5 L7,7 L9.5,9 L14,3 L15,3.9 L9.7,10.8 L7.2,8.8 L4.5,12.3 Z" />
+                            <TextBlock Text="Замеры времени" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </ListBoxItem>
                 </ListBox>
             </DockPanel>
         </Border>
@@ -85,6 +95,7 @@
             <views:FloodFillView />
             <views:MazeView />
             <views:MergeSortView />
+            <views:BenchmarkView />
         </Carousel>
     </Grid>
 </Window>
