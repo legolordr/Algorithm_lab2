@@ -1,11 +1,12 @@
 using System.Diagnostics;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Threading;
 using Algorithm_lab2.PersonalAlgorithms.MergeSort;
 
 namespace Algorithm_lab2.Views;
 
-public partial class MergeSortView : UserControl
+public partial class MergeSortView : UserControl, IShortcutHandler
 {
     private readonly DispatcherTimer _timer = new() { Interval = TimeSpan.FromMilliseconds(16) };
     private readonly Stopwatch _frameClock = new();
@@ -28,6 +29,7 @@ public partial class MergeSortView : UserControl
         PlayButton.Click += (_, _) => TogglePlay();
         StepButton.Click += (_, _) => Step();
         ShuffleButton.Click += (_, _) => Generate();
+        ResetButton.Click += (_, _) => { Pause(); Restart(); };
 
         UpdateSpeedLabel();
         Generate();
@@ -48,13 +50,17 @@ public partial class MergeSortView : UserControl
             _ => Shuffled(size),
         };
 
+        var stopwatch = Stopwatch.StartNew();
         var result = MergeSorter.Sort(_input);
+        stopwatch.Stop();
         _steps = result.Steps;
 
-        CallsText.Text = $"Рекурсивных вызовов: {result.Calls:N0}";
-        DepthText.Text = $"Макс. глубина рекурсии: {result.MaxDepth}";
-        ComparisonsText.Text = $"Сравнений: {result.Comparisons:N0}";
-        WritesText.Text = $"Записей: {result.Writes:N0}";
+        CallsStat.Value = $"{result.Calls:N0}";
+        DepthStat.Value = result.MaxDepth.ToString();
+        ComparisonsStat.Value = $"{result.Comparisons:N0}";
+        WritesStat.Value = $"{result.Writes:N0}";
+        TimeStat.Value = TimeFormat.Format(stopwatch.Elapsed);
+        Progress.Maximum = Math.Max(1, _steps.Count);
 
         Restart();
     }
@@ -162,9 +168,30 @@ public partial class MergeSortView : UserControl
         }
     }
 
-    private void UpdateProgress() => ProgressText.Text = $"Шаг: {_done:N0} / {_steps.Count:N0}";
+    private void UpdateProgress()
+    {
+        ProgressRow.Value = $"{_done:N0} / {_steps.Count:N0}";
+        Progress.Value = _done;
+    }
 
-    private void UpdateSpeedLabel() => SpeedLabel.Text = $"Скорость: {SpeedSlider.Value:F0} шаг/с";
+    public bool HandleShortcut(Key key)
+    {
+        switch (key)
+        {
+            case Key.Space: TogglePlay(); return true;
+            case Key.Right: Step(); return true;
+            case Key.R: Pause(); Restart(); return true;
+            case Key.N: Generate(); return true;
+            default: return false;
+        }
+    }
+
+    private void UpdateSpeedLabel()
+    {
+        SpeedRow.Value = $"{SpeedSlider.Value:F0} шаг/с";
+        // An animation takes most of the time between two steps, so it finishes before the next one starts.
+        Tree.AnimationDuration = TimeSpan.FromSeconds(Math.Clamp(0.75 / SpeedSlider.Value, 0.08, 0.45));
+    }
 
     private int[] Shuffled(int size)
     {

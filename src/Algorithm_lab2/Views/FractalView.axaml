@@ -2,29 +2,50 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="using:Algorithm_lab2.Controls"
              x:Class="Algorithm_lab2.Views.FractalView">
-    <Grid ColumnDefinitions="300,*">
-        <ScrollViewer>
-            <StackPanel Margin="8,12,16,12" Spacing="10">
-                <TextBlock Text="Фрактал" FontWeight="SemiBold" FontSize="16" />
-                <ListBox x:Name="FractalList" />
+    <Grid RowDefinitions="Auto,*" ColumnDefinitions="300,*" Margin="24,20,24,24">
+        <StackPanel Grid.ColumnSpan="2" Spacing="4" Margin="0,0,0,20">
+            <TextBlock Classes="h1" Text="Фракталы" />
+            <TextBlock Classes="subtitle"
+                       Text="Фигура строится рекурсивно: каждый вызов рисует часть фигуры и вызывает себя для частей поменьше, пока не дойдёт до глубины 0." />
+        </StackPanel>
 
-                <TextBlock x:Name="DepthLabel" FontWeight="SemiBold" Margin="0,8,0,0" />
-                <Slider x:Name="DepthSlider" Minimum="0" TickFrequency="1" IsSnapToTickEnabled="True" />
+        <ScrollViewer Grid.Row="1">
+            <StackPanel Spacing="12" Margin="0,0,14,0">
+                <Border Classes="card">
+                    <StackPanel Spacing="12">
+                        <TextBlock Classes="section" Text="ПАРАМЕТРЫ" />
+                        <StackPanel Spacing="6">
+                            <TextBlock Classes="label" Text="Фрактал" />
+                            <ListBox x:Name="FractalList" AutomationProperties.Name="Фрактал" />
+                        </StackPanel>
+                        <StackPanel Spacing="2">
+                            <controls:StatRow x:Name="DepthRow" Label="Глубина рекурсии" />
+                            <Slider x:Name="DepthSlider" Minimum="0" TickFrequency="1" IsSnapToTickEnabled="True"
+                                    AutomationProperties.Name="Глубина рекурсии" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
 
-                <TextBlock x:Name="DescriptionText" TextWrapping="Wrap" Opacity="0.8" />
+                <Border Classes="card">
+                    <StackPanel Spacing="8">
+                        <TextBlock Classes="section" Text="КАК СТРОИТСЯ" />
+                        <TextBlock x:Name="DescriptionText" Classes="status" />
+                    </StackPanel>
+                </Border>
 
-                <Border Background="#1AFFFFFF" CornerRadius="6" Padding="12" Margin="0,8,0,0">
-                    <StackPanel Spacing="4">
-                        <TextBlock x:Name="CallsText" />
-                        <TextBlock x:Name="ShapesText" />
-                        <TextBlock x:Name="TimeText" />
+                <Border Classes="card">
+                    <StackPanel Spacing="8">
+                        <TextBlock Classes="section" Text="СТАТИСТИКА" />
+                        <controls:StatRow x:Name="CallsStat" Label="Рекурсивных вызовов" />
+                        <controls:StatRow x:Name="SegmentsStat" Label="Отрезков" />
+                        <controls:StatRow x:Name="TimeStat" Label="Время расчёта" />
                     </StackPanel>
                 </Border>
             </StackPanel>
         </ScrollViewer>
 
-        <Border Grid.Column="1" Margin="0,12,0,0" CornerRadius="8" Background="#0F141A" ClipToBounds="True">
-            <controls:FractalCanvas x:Name="Canvas" Margin="12" />
+        <Border Grid.Row="1" Grid.Column="1" Classes="canvas">
+            <controls:FractalCanvas x:Name="Canvas" Margin="16" AutomationProperties.Name="Изображение фрактала" />
         </Border>
     </Grid>
 </UserControl>

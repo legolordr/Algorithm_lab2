@@ -2,6 +2,7 @@ using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using Algorithm_lab2.Theme;
 using Algorithm_lab2.Hanoi;
 
 namespace Algorithm_lab2.Controls;
@@ -9,9 +10,9 @@ namespace Algorithm_lab2.Controls;
 /// <summary>Draws the three rods, the disks on them and the disk that is currently flying between rods.</summary>
 public sealed class HanoiBoard : Control
 {
-    private static readonly IBrush RodBrush = new SolidColorBrush(Color.Parse("#5D6B7A"));
-    private static readonly IBrush LabelBrush = new SolidColorBrush(Color.Parse("#B0BEC5"));
-    private static readonly IPen HighlightPen = new Pen(Brushes.White, 2);
+    private static readonly IBrush RodBrush = Palette.Brush(Palette.BorderStrong);
+    private static readonly IBrush LabelBrush = Palette.Brush(Palette.MutedForeground);
+    private static readonly IPen HighlightPen = new Pen(Palette.Brush(Palette.Foreground), 2);
 
     private HanoiState? _state;
     private HanoiMove? _flying;

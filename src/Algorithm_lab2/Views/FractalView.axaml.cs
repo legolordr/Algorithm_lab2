@@ -1,10 +1,11 @@
 using Avalonia.Controls;
+using Avalonia.Input;
 using Algorithm_lab2.Controls;
 using Algorithm_lab2.Fractals;
 
 namespace Algorithm_lab2.Views;
 
-public partial class FractalView : UserControl
+public partial class FractalView : UserControl, IShortcutHandler
 {
     // Add new fractals here; the list, depth slider and statistics pick them up automatically.
     private readonly Fractal[] _fractals =
@@ -24,7 +25,7 @@ public partial class FractalView : UserControl
         if (_fractals.Length == 0)
         {
             DepthSlider.IsEnabled = false;
-            DepthLabel.Text = "Глубина рекурсии: —";
+            DepthRow.Value = "—";
             DescriptionText.Text = "Фракталы пока не добавлены.";
             return;
         }
@@ -42,21 +43,30 @@ public partial class FractalView : UserControl
         DepthSlider.Value = fractal.DefaultDepth;
         Canvas.Depth = fractal.DefaultDepth;
         Canvas.Fractal = fractal;
-        DepthLabel.Text = $"Глубина рекурсии: {fractal.DefaultDepth}";
+        DepthRow.Value = fractal.DefaultDepth.ToString();
     }
 
     private void OnDepthChanged(int depth)
     {
-        DepthLabel.Text = $"Глубина рекурсии: {depth}";
+        DepthRow.Value = depth.ToString();
         Canvas.Depth = depth;
+    }
+
+    public bool HandleShortcut(Key key)
+    {
+        if (!DepthSlider.IsEnabled || key is not (Key.Left or Key.Right))
+            return false;
+
+        DepthSlider.Value = Math.Clamp(DepthSlider.Value + (key == Key.Right ? 1 : -1), 0, DepthSlider.Maximum);
+        return true;
     }
 
     private void OnBuilt(object? sender, FractalBuiltEventArgs e)
     {
-        CallsText.Text = $"Рекурсивных вызовов: {e.Result.Calls:N0}";
+        CallsStat.Value = $"{e.Result.Calls:N0}";
         // A polygon has as many sides as points, a polyline one fewer.
         var segments = e.Result.Shapes.Sum(s => s.Closed ? s.Points.Length : s.Points.Length - 1);
-        ShapesText.Text = $"Отрезков: {segments:N0}";
-        TimeText.Text = $"Построение: {e.Elapsed.TotalMilliseconds:F1} мс";
+        SegmentsStat.Value = $"{segments:N0}";
+        TimeStat.Value = TimeFormat.Format(e.Elapsed);
     }
 }

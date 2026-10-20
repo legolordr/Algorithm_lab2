@@ -1,11 +1,12 @@
 ﻿namespace Algorithm_lab2.Views;
 using System.Diagnostics;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Threading;
 using Algorithm_lab2.PersonalAlgorithms.Maze;
 
 
-public partial class MazeView : UserControl
+public partial class MazeView : UserControl, IShortcutHandler
 {
     private readonly DispatcherTimer _timer = new() { Interval = TimeSpan.FromMilliseconds(16) };
     private readonly Stopwatch _frameClock = new();
@@ -56,10 +57,10 @@ public partial class MazeView : UserControl
         Canvas.Resize(size, size);
         Canvas.ResetAnimation();
 
-        CallsText.Text  = $"Рекурсивных вызовов: {result.Calls:N0}";
-        DepthText.Text  = $"Макс. глубина рекурсии: {result.MaxDepth:N0}";
-        SeedText.Text   = $"Seed: {result.Seed}";
-        TimeText.Text   = $"Время расчёта: {sw.Elapsed.TotalMilliseconds:F2} мс";
+        CallsStat.Value = $"{result.Calls:N0}";
+        DepthStat.Value = $"{result.MaxDepth:N0}";
+        SeedStat.Value  = result.Seed.ToString();
+        TimeStat.Value  = TimeFormat.Format(sw.Elapsed);
         StatusText.Text = "";
 
         UpdateProgress();
@@ -133,14 +134,30 @@ public partial class MazeView : UserControl
         if (_currentStep >= total)
         {
             _timer.Stop();
-            StatusText.Text = $"Лабиринт построен ✓";
+            StatusText.Text = "Лабиринт построен";
             UpdatePlayButton();
         }
     }
 
-    private void UpdateProgress() =>
-        ProgressText.Text = $"Шаг: {_currentStep:N0} / {(_result?.Steps.Count ?? 0):N0}";
+    private void UpdateProgress()
+    {
+        var total = _result?.Steps.Count ?? 0;
+        ProgressRow.Value = $"{_currentStep:N0} / {total:N0}";
+        Progress.Maximum = Math.Max(1, total);
+        Progress.Value = _currentStep;
+    }
+
+    public bool HandleShortcut(Key key)
+    {
+        switch (key)
+        {
+            case Key.Space: TogglePlayPause(); return true;
+            case Key.R: RestartAnimation(); return true;
+            case Key.N: Regenerate(); return true;
+            default: return false;
+        }
+    }
 
     private void UpdateSpeedLabel() =>
-        SpeedLabel.Text = $"Скорость: {SpeedSlider.Value:F0} шагов/с";
+        SpeedRow.Value = $"{SpeedSlider.Value:F0} шагов/с";
 }

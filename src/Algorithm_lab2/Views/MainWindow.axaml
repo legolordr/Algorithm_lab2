@@ -3,23 +3,89 @@
         xmlns:views="using:Algorithm_lab2.Views"
         x:Class="Algorithm_lab2.Views.MainWindow"
         Title="Лабораторная работа №2 — Рекурсивные алгоритмы"
-        Width="1200" Height="800" MinWidth="900" MinHeight="600"
-        WindowStartupLocation="CenterScreen">
-    <TabControl Margin="8,4,8,8">
-        <TabItem Header="Фракталы">
+        Width="1320" Height="840" MinWidth="1060" MinHeight="640"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource BackgroundBrush}">
+    <Grid ColumnDefinitions="240,*">
+        <!-- Sidebar: app title, sections, keyboard shortcuts. -->
+        <Border Background="{DynamicResource SidebarBrush}" BorderBrush="{DynamicResource BorderBrush}"
+                BorderThickness="0,0,1,0">
+            <DockPanel Margin="16,20,16,16">
+                <StackPanel DockPanel.Dock="Top" Margin="8,0,8,20" Spacing="2">
+                    <TextBlock Text="Рекурсия" FontSize="20" FontWeight="SemiBold"
+                               Foreground="{DynamicResource ForegroundBrush}" />
+                    <TextBlock Text="Лабораторная работа №2" Classes="hint" />
+                </StackPanel>
+
+                <StackPanel DockPanel.Dock="Bottom" Margin="8,16,8,0" Spacing="8">
+                    <TextBlock Text="ГОРЯЧИЕ КЛАВИШИ" Classes="section" />
+                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnSpacing="10"
+                          RowSpacing="6">
+                        <Border Classes="kbd"><TextBlock Text="Пробел" /></Border>
+                        <TextBlock Grid.Column="1" Text="старт / пауза" Classes="hint" VerticalAlignment="Center" />
+                        <Border Grid.Row="1" Classes="kbd"><TextBlock Text="→" /></Border>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="шаг" Classes="hint" VerticalAlignment="Center" />
+                        <Border Grid.Row="2" Classes="kbd"><TextBlock Text="← →" /></Border>
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="глубина фрактала" Classes="hint"
+                                   VerticalAlignment="Center" />
+                        <Border Grid.Row="3" Classes="kbd"><TextBlock Text="R" /></Border>
+                        <TextBlock Grid.Row="3" Grid.Column="1" Text="начать сначала" Classes="hint"
+                                   VerticalAlignment="Center" />
+                        <Border Grid.Row="4" Classes="kbd"><TextBlock Text="N" /></Border>
+                        <TextBlock Grid.Row="4" Grid.Column="1" Text="новые данные" Classes="hint"
+                                   VerticalAlignment="Center" />
+                    </Grid>
+                </StackPanel>
+
+                <ListBox x:Name="Nav" Classes="nav" SelectedIndex="0"
+                         AutomationProperties.Name="Разделы приложения">
+                    <ListBoxItem>
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <PathIcon Width="16" Height="16" Data="M8,1 L15,14 L1,14 Z M8,6.5 L11.2,12.5 L4.8,12.5 Z" />
+                            <TextBlock Text="Фракталы" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <PathIcon Width="16" Height="16"
+                                      Data="M1,14 H15 V15.5 H1 Z M3,11 H13 V13 H3 Z M5,8 H11 V10 H5 Z M7.25,2 H8.75 V8 H7.25 Z" />
+                            <TextBlock Text="Ханойская башня" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <PathIcon Width="16" Height="16"
+                                      Data="M1,1 H7 V7 H1 Z M9,1 H15 V7 H9 Z M1,9 H7 V15 H1 Z M10.5,10.5 H13.5 V13.5 H10.5 Z" />
+                            <TextBlock Text="Рекурсивная заливка" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <PathIcon Width="16" Height="16"
+                                      Data="M1,1 H15 V15 H1 Z M2.5,2.5 V13.5 H13.5 V2.5 Z M5,2.5 H6.25 V10 H5 Z M9.75,6 H11 V13.5 H9.75 Z" />
+                            <TextBlock Text="Генератор лабиринта" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <PathIcon Width="16" Height="16"
+                                      Data="M4,1 H12 V4 H4 Z M1,7 H7 V10 H1 Z M9,7 H15 V10 H9 Z M0.5,13 H3.5 V15.5 H0.5 Z M4.5,13 H7.5 V15.5 H4.5 Z M8.5,13 H11.5 V15.5 H8.5 Z M12.5,13 H15.5 V15.5 H12.5 Z" />
+                            <TextBlock Text="Сортировка слиянием" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </ListBoxItem>
+                </ListBox>
+            </DockPanel>
+        </Border>
+
+        <Carousel Grid.Column="1" x:Name="Pages" SelectedIndex="{Binding #Nav.SelectedIndex}">
+            <Carousel.PageTransition>
+                <CrossFade Duration="0:0:0.15" />
+            </Carousel.PageTransition>
             <views:FractalView />
-        </TabItem>
-        <TabItem Header="Ханойская башня">
             <views:HanoiView />
-        </TabItem>
-        <TabItem Header="Рекурсивная заливка">
             <views:FloodFillView />
-        </TabItem>
-        <TabItem Header="Генератор лабиринта">
             <views:MazeView />
-        </TabItem>
-        <TabItem Header="Сортировка слиянием">
             <views:MergeSortView />
-        </TabItem>
-    </TabControl>
+        </Carousel>
+    </Grid>
 </Window>

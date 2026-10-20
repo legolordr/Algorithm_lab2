@@ -3,6 +3,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using Algorithm_lab2.Theme;
 using Algorithm_lab2.PersonalAlgorithms.Maze;
 
 
@@ -15,11 +16,11 @@ public class MazeCanvas : Control
     private bool[,] _visited      = new bool[0, 0];
     private (int X, int Y)? _cursor;
 
-    private static readonly IBrush BackgroundBrush   = new SolidColorBrush(Color.Parse("#0F141A"));
-    private static readonly IBrush CellUnvisitedBrush = new SolidColorBrush(Color.Parse("#1A1A22"));
-    private static readonly IBrush CellVisitedBrush   = new SolidColorBrush(Color.Parse("#1E3A2A"));
-    private static readonly IBrush CursorBrush        = new SolidColorBrush(Color.Parse("#FFC107"));
-    private static readonly IPen   WallPen  = new Pen(new SolidColorBrush(Color.Parse("#E6FFFFFF")), 1.2);
+    private static readonly IBrush BackgroundBrush   = Palette.Brush(Palette.Canvas);
+    private static readonly IBrush CellUnvisitedBrush = Palette.Brush(Palette.VizIdleSurface);
+    private static readonly IBrush CellVisitedBrush   = Palette.Brush(Palette.VizDoneSurface);
+    private static readonly IBrush CursorBrush        = Palette.Brush(Palette.VizCompare);
+    private static readonly IPen   WallPen  = new Pen(Palette.Brush(Palette.VizText), 1.2);
     private static readonly IPen   BorderPen = new Pen(new SolidColorBrush(Color.FromArgb(80, 255, 255, 255)), 1);
 
     public MazeCanvas()

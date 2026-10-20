@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
+using Algorithm_lab2.Theme;
 
 
 public class FloodFillCanvas : Control
@@ -12,9 +13,9 @@ public class FloodFillCanvas : Control
     private IReadOnlyList<(int X, int Y)> _sequence = [];
     private int _fillCount;
 
-    private static readonly IBrush BackgroundBrush = new SolidColorBrush(Color.Parse("#0F141A"));
-    private static readonly IBrush FilledBrush     = new SolidColorBrush(Color.Parse("#4CAF50"));
-    private static readonly IBrush StartBrush      = new SolidColorBrush(Color.Parse("#FFC107"));
+    private static readonly IBrush BackgroundBrush = Palette.Brush(Palette.Canvas);
+    private static readonly IBrush FilledBrush     = Palette.Brush(Palette.VizDone);
+    private static readonly IBrush StartBrush      = Palette.Brush(Palette.VizCompare);
     private static readonly IPen   GridPen         = new Pen(new SolidColorBrush(Color.FromArgb(24, 255, 255, 255)), 1);
     private static readonly IPen   BorderPen       = new Pen(new SolidColorBrush(Color.FromArgb(80, 255, 255, 255)), 1);
 

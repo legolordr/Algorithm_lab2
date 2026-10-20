@@ -2,11 +2,12 @@
 
 using System.Diagnostics;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Threading;
 using Algorithm_lab2.PersonalAlgorithms.FloodFill;
 
 
-public partial class FloodFillView : UserControl
+public partial class FloodFillView : UserControl, IShortcutHandler
 {
     private readonly DispatcherTimer _timer = new() { Interval = TimeSpan.FromMilliseconds(16) };
     private readonly Stopwatch _frameClock = new();
@@ -65,10 +66,10 @@ public partial class FloodFillView : UserControl
         Canvas.SetSequence(_sequence);
         Canvas.FillCount = 0;
 
-        CallsText.Text = $"Рекурсивных вызовов: {result.Calls:N0}";
-        MaxDepthText.Text = $"Макс. глубина рекурсии: {result.MaxDepth:N0}";
-        TimeText.Text = $"Время расчёта: {sw.Elapsed.TotalMilliseconds:F2} мс";
-        ProgressText.Text = $"Закрашено: 0 / {_sequence.Count:N0}";
+        CallsStat.Value = $"{result.Calls:N0}";
+        MaxDepthStat.Value = $"{result.MaxDepth:N0}";
+        TimeStat.Value = TimeFormat.Format(sw.Elapsed);
+        UpdateProgress();
 
         PlayPauseButton.IsEnabled = _sequence.Count > 0;
         if (_sequence.Count > 0)
@@ -111,7 +112,7 @@ public partial class FloodFillView : UserControl
 
         _currentIndex = Math.Min(_currentIndex + toAdd, _sequence.Count);
         Canvas.FillCount = _currentIndex;
-        ProgressText.Text = $"Закрашено: {_currentIndex:N0} / {_sequence.Count:N0}";
+        UpdateProgress();
 
         if (_currentIndex >= _sequence.Count)
         {
@@ -128,17 +129,34 @@ public partial class FloodFillView : UserControl
         _accumulator = 0;
         Canvas.Clear();
 
-        CallsText.Text = "Рекурсивных вызовов: 0";
-        MaxDepthText.Text = "Макс. глубина рекурсии: 0";
-        TimeText.Text = "Время расчёта: —";
-        ProgressText.Text = "Готов к запуску";
+        CallsStat.Value = "0";
+        MaxDepthStat.Value = "0";
+        TimeStat.Value = "—";
+        UpdateProgress();
         PlayPauseButton.IsEnabled = false;
         PlayPauseButton.Content = "Пауза";
     }
 
+    private void UpdateProgress()
+    {
+        ProgressRow.Value = _sequence.Count == 0 ? "—" : $"{_currentIndex:N0} / {_sequence.Count:N0}";
+        Progress.Maximum = Math.Max(1, _sequence.Count);
+        Progress.Value = _currentIndex;
+    }
+
+    public bool HandleShortcut(Key key)
+    {
+        switch (key)
+        {
+            case Key.Space when PlayPauseButton.IsEnabled: TogglePlayPause(); return true;
+            case Key.R: ResetAll(); return true;
+            default: return false;
+        }
+    }
+
     private void UpdateSpeedLabel() =>
-        SpeedLabel.Text = $"Скорость: {SpeedSlider.Value:F0} клеток/с";
+        SpeedRow.Value = $"{SpeedSlider.Value:F0} клеток/с";
 
     private void UpdateMaxCellsLabel() =>
-        MaxCellsLabel.Text = $"Максимум клеток: {(int)MaxCellsSlider.Value:N0}";
+        MaxCellsRow.Value = $"{(int)MaxCellsSlider.Value:N0}";
 }

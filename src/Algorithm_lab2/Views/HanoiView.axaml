@@ -2,43 +2,73 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="using:Algorithm_lab2.Controls"
              x:Class="Algorithm_lab2.Views.HanoiView">
-    <Grid ColumnDefinitions="300,*">
-        <Grid RowDefinitions="Auto,*" Margin="8,12,16,12">
-            <StackPanel Spacing="10">
-                <TextBlock Text="Количество дисков" FontWeight="SemiBold" />
-                <NumericUpDown x:Name="DiskCount" Minimum="1" Maximum="12" Value="8" Increment="1"
-                               FormatString="0" />
+    <Grid RowDefinitions="Auto,*" ColumnDefinitions="300,*" Margin="24,20,24,24">
+        <StackPanel Grid.ColumnSpan="2" Spacing="4" Margin="0,0,0,20">
+            <TextBlock Classes="h1" Text="Ханойская башня" />
+            <TextBlock Classes="subtitle"
+                       Text="Перенести пирамиду со стержня A на C: за ход — одно кольцо, большее нельзя класть на меньшее. Рекурсия: убрать n − 1 колец, перенести самое большое, вернуть n − 1 колец сверху." />
+        </StackPanel>
 
-                <TextBlock Text="Алгоритм" FontWeight="SemiBold" Margin="0,4,0,0" />
-                <RadioButton x:Name="RecursiveRadio" GroupName="Algorithm" Content="Рекурсия" IsChecked="True" />
-                <RadioButton x:Name="StackRadio" GroupName="Algorithm" Content="Явный стек (без рекурсии)" />
-
-                <TextBlock x:Name="DurationLabel" FontWeight="SemiBold" Margin="0,4,0,0" />
-                <Slider x:Name="DurationSlider" Minimum="20" Maximum="1000" Value="300" />
-
-                <StackPanel Orientation="Horizontal" Spacing="8">
-                    <Button x:Name="PlayButton" Content="Старт" MinWidth="80" Classes="accent" />
-                    <Button x:Name="StepButton" Content="Шаг" />
-                    <Button x:Name="ResetButton" Content="Сброс" />
-                </StackPanel>
-
-                <Border Background="#1AFFFFFF" CornerRadius="6" Padding="12">
-                    <StackPanel Spacing="4">
-                        <TextBlock x:Name="ProgressText" FontWeight="SemiBold" />
-                        <TextBlock x:Name="MinMovesText" />
-                        <TextBlock x:Name="DepthText" />
-                        <TextBlock x:Name="StatusText" />
+        <DockPanel Grid.Row="1">
+            <StackPanel DockPanel.Dock="Top" Spacing="12" Margin="0,0,0,12">
+                <Border Classes="card">
+                    <StackPanel Spacing="12">
+                        <TextBlock Classes="section" Text="ПАРАМЕТРЫ" />
+                        <StackPanel Spacing="6">
+                            <TextBlock Classes="label" Text="Количество колец" />
+                            <NumericUpDown x:Name="DiskCount" Minimum="1" Maximum="12" Value="8" Increment="1"
+                                           FormatString="0" AutomationProperties.Name="Количество колец" />
+                        </StackPanel>
+                        <StackPanel Spacing="4">
+                            <TextBlock Classes="label" Text="Алгоритм" />
+                            <RadioButton x:Name="RecursiveRadio" GroupName="Algorithm" Content="Рекурсия"
+                                         IsChecked="True" />
+                            <RadioButton x:Name="StackRadio" GroupName="Algorithm" Content="Явный стек (без рекурсии)" />
+                        </StackPanel>
+                        <StackPanel Spacing="2">
+                            <controls:StatRow x:Name="DurationRow" Label="Длительность хода" />
+                            <Slider x:Name="DurationSlider" Minimum="20" Maximum="1000" Value="300"
+                                    AutomationProperties.Name="Длительность хода" />
+                        </StackPanel>
                     </StackPanel>
                 </Border>
 
-                <TextBlock Text="Ходы" FontWeight="SemiBold" Margin="0,4,0,0" />
+                <Border Classes="card">
+                    <StackPanel Spacing="8">
+                        <Button x:Name="PlayButton" Content="Старт" Classes="accent wide" ToolTip.Tip="Пробел" />
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                            <Button x:Name="StepButton" Content="Шаг" Classes="wide" ToolTip.Tip="→" />
+                            <Button Grid.Column="1" x:Name="ResetButton" Content="Сначала" Classes="wide"
+                                    ToolTip.Tip="R" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <Border Classes="card">
+                    <StackPanel Spacing="8">
+                        <TextBlock Classes="section" Text="СОСТОЯНИЕ" />
+                        <controls:StatRow x:Name="ProgressRow" Label="Ход" />
+                        <ProgressBar x:Name="Progress" />
+                        <controls:StatRow x:Name="MinMovesStat" Label="Минимум ходов" />
+                        <controls:StatRow x:Name="DepthStat" Label="Макс. глубина рекурсии" />
+                        <controls:StatRow x:Name="TimeStat" Label="Время расчёта" />
+                        <TextBlock x:Name="StatusText" Classes="status" Foreground="{DynamicResource VizDoneBrush}"
+                                   IsVisible="False" Text="Пирамида перенесена на стержень C" />
+                    </StackPanel>
+                </Border>
             </StackPanel>
 
-            <ListBox Grid.Row="1" x:Name="MovesList" Margin="0,8,0,0" />
-        </Grid>
+            <Border Classes="card" Padding="0">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Classes="section" Text="ХОДЫ" Margin="16,14,16,4" />
+                    <ListBox x:Name="MovesList" Classes="log" Background="Transparent" MinHeight="80"
+                             AutomationProperties.Name="Журнал ходов" />
+                </DockPanel>
+            </Border>
+        </DockPanel>
 
-        <Border Grid.Column="1" Margin="0,12,0,0" CornerRadius="8" Background="#0F141A" ClipToBounds="True">
-            <controls:HanoiBoard x:Name="Board" Margin="12" />
+        <Border Grid.Row="1" Grid.Column="1" Classes="canvas">
+            <controls:HanoiBoard x:Name="Board" Margin="16" AutomationProperties.Name="Стержни и кольца" />
         </Border>
     </Grid>
 </UserControl>

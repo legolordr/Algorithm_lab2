@@ -2,44 +2,67 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="using:Algorithm_lab2.Controls"
              x:Class="Algorithm_lab2.Views.FloodFillView">
-    <Grid ColumnDefinitions="300,*">
-        <ScrollViewer>
-            <StackPanel Margin="8,12,16,12" Spacing="10">
-                <TextBlock Text="Рекурсивная заливка" FontWeight="SemiBold" FontSize="16" />
-                <TextBlock Text="Нажмите на клетку — запустится рекурсивная 4-связная заливка от этой точки."
-                           TextWrapping="Wrap" Opacity="0.75" />
+    <Grid RowDefinitions="Auto,*" ColumnDefinitions="300,*" Margin="24,20,24,24">
+        <StackPanel Grid.ColumnSpan="2" Spacing="4" Margin="0,0,0,20">
+            <TextBlock Classes="h1" Text="Рекурсивная заливка" />
+            <TextBlock Classes="subtitle"
+                       Text="Нажмите на клетку поля — от неё запустится 4-связная заливка: клетка закрашивается и вызывает заливку для четырёх соседей." />
+        </StackPanel>
 
-                <TextBlock Text="Размер сетки" FontWeight="SemiBold" Margin="0,8,0,0" />
-                <NumericUpDown x:Name="GridSizeInput" Minimum="10" Maximum="60" Value="40"
-                               Increment="5" FormatString="0" />
-                <TextBlock x:Name="GridInfoText" Opacity="0.6" />
+        <ScrollViewer Grid.Row="1">
+            <StackPanel Spacing="12" Margin="0,0,14,0">
+                <Border Classes="card">
+                    <StackPanel Spacing="12">
+                        <TextBlock Classes="section" Text="ПАРАМЕТРЫ" />
+                        <StackPanel Spacing="6">
+                            <TextBlock Classes="label" Text="Размер сетки" />
+                            <NumericUpDown x:Name="GridSizeInput" Minimum="10" Maximum="60" Value="40"
+                                           Increment="5" FormatString="0" AutomationProperties.Name="Размер сетки" />
+                            <TextBlock x:Name="GridInfoText" Classes="hint" />
+                        </StackPanel>
+                        <StackPanel Spacing="2">
+                            <controls:StatRow x:Name="SpeedRow" Label="Скорость" />
+                            <Slider x:Name="SpeedSlider" Minimum="50" Maximum="5000" Value="500"
+                                    AutomationProperties.Name="Скорость" />
+                        </StackPanel>
+                        <StackPanel Spacing="2">
+                            <controls:StatRow x:Name="MaxCellsRow" Label="Максимум клеток" />
+                            <Slider x:Name="MaxCellsSlider" Minimum="10" Maximum="1600"
+                                    Value="1600" TickFrequency="1" IsSnapToTickEnabled="True"
+                                    AutomationProperties.Name="Максимум клеток" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
 
-                <TextBlock x:Name="SpeedLabel" FontWeight="SemiBold" Margin="0,4,0,0" />
-                <Slider x:Name="SpeedSlider" Minimum="50" Maximum="5000" Value="500" />
+                <Border Classes="card">
+                    <StackPanel Spacing="8">
+                        <Button x:Name="PlayPauseButton" Content="Пауза" Classes="accent wide" IsEnabled="False"
+                                ToolTip.Tip="Пробел" />
+                        <Button x:Name="ClearButton" Content="Очистить" Classes="wide" ToolTip.Tip="R" />
+                    </StackPanel>
+                </Border>
 
-                <TextBlock x:Name="MaxCellsLabel" FontWeight="SemiBold" Margin="0,4,0,0" />
-                <Slider x:Name="MaxCellsSlider" Minimum="10" Maximum="1600"
-                        Value="1600" TickFrequency="1" IsSnapToTickEnabled="True" />
+                <Border Classes="card">
+                    <StackPanel Spacing="8">
+                        <TextBlock Classes="section" Text="СОСТОЯНИЕ" />
+                        <controls:StatRow x:Name="ProgressRow" Label="Закрашено" />
+                        <ProgressBar x:Name="Progress" />
+                    </StackPanel>
+                </Border>
 
-                <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,8,0,0">
-                    <Button x:Name="PlayPauseButton" Content="Пауза" MinWidth="110"
-                            IsEnabled="False" Classes="accent" />
-                    <Button x:Name="ClearButton" Content="Очистить" />
-                </StackPanel>
-
-                <Border Background="#1AFFFFFF" CornerRadius="6" Padding="12" Margin="0,8,0,0">
-                    <StackPanel Spacing="4">
-                        <TextBlock x:Name="ProgressText" Text="Готов к запуску" FontWeight="SemiBold" />
-                        <TextBlock x:Name="CallsText" Text="Рекурсивных вызовов: 0" />
-                        <TextBlock x:Name="MaxDepthText" Text="Макс. глубина рекурсии: 0" />
-                        <TextBlock x:Name="TimeText" Text="Время расчёта: —" />
+                <Border Classes="card">
+                    <StackPanel Spacing="8">
+                        <TextBlock Classes="section" Text="СТАТИСТИКА" />
+                        <controls:StatRow x:Name="CallsStat" Label="Рекурсивных вызовов" />
+                        <controls:StatRow x:Name="MaxDepthStat" Label="Макс. глубина рекурсии" />
+                        <controls:StatRow x:Name="TimeStat" Label="Время расчёта" />
                     </StackPanel>
                 </Border>
             </StackPanel>
         </ScrollViewer>
 
-        <Border Grid.Column="1" Margin="0,12,0,0" CornerRadius="8" Background="#0F141A" ClipToBounds="True">
-            <controls:FloodFillCanvas x:Name="Canvas" Margin="12" />
+        <Border Grid.Row="1" Grid.Column="1" Classes="canvas">
+            <controls:FloodFillCanvas x:Name="Canvas" Margin="16" AutomationProperties.Name="Поле для заливки" />
         </Border>
     </Grid>
 </UserControl>

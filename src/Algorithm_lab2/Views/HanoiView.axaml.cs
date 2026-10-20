@@ -1,12 +1,13 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Threading;
 using Algorithm_lab2.Hanoi;
 
 namespace Algorithm_lab2.Views;
 
-public partial class HanoiView : UserControl
+public partial class HanoiView : UserControl, IShortcutHandler
 {
     private readonly DispatcherTimer _timer = new() { Interval = TimeSpan.FromMilliseconds(16) };
     private readonly Stopwatch _frameClock = new();
@@ -38,13 +39,26 @@ public partial class HanoiView : UserControl
 
     private bool IsPlaying => _timer.IsEnabled;
 
+    public bool HandleShortcut(Key key)
+    {
+        switch (key)
+        {
+            case Key.Space: TogglePlay(); return true;
+            case Key.Right: Step(); return true;
+            case Key.R: Reset(); return true;
+            default: return false;
+        }
+    }
+
     private void Reset()
     {
         Pause();
 
         var disks = (int)(DiskCount.Value ?? 8);
         var useStack = StackRadio.IsChecked == true;
+        var stopwatch = Stopwatch.StartNew();
         var solution = useStack ? HanoiSolver.SolveWithStack(disks) : HanoiSolver.SolveRecursive(disks);
+        stopwatch.Stop();
 
         _state = new HanoiState(disks);
         _moves = solution.Moves;
@@ -53,10 +67,11 @@ public partial class HanoiView : UserControl
         _log.Clear();
         Board.State = _state;
 
-        MinMovesText.Text = $"Минимум: 2^{disks} − 1 = {HanoiSolver.MinMoves(disks)}";
-        DepthText.Text = useStack
-            ? $"Макс. размер стека: {solution.MaxDepth}"
-            : $"Макс. глубина рекурсии: {solution.MaxDepth}";
+        MinMovesStat.Value = $"2^{disks} − 1 = {HanoiSolver.MinMoves(disks):N0}";
+        DepthStat.Label = useStack ? "Макс. размер стека" : "Макс. глубина рекурсии";
+        DepthStat.Value = solution.MaxDepth.ToString();
+        TimeStat.Value = TimeFormat.Format(stopwatch.Elapsed);
+        Progress.Maximum = Math.Max(1, _moves.Count);
         UpdateProgress();
     }
 
@@ -143,10 +158,11 @@ public partial class HanoiView : UserControl
 
     private void UpdateProgress()
     {
-        ProgressText.Text = $"Ход: {_done} / {_moves.Count}";
-        StatusText.Text = _state.IsSolved() ? "Пирамида перенесена на стержень C ✓" : "";
+        ProgressRow.Value = $"{_done:N0} / {_moves.Count:N0}";
+        Progress.Value = _done;
+        StatusText.IsVisible = _state.IsSolved();
     }
 
     private void UpdateDurationLabel() =>
-        DurationLabel.Text = $"Длительность хода: {DurationSlider.Value:F0} мс";
+        DurationRow.Value = $"{DurationSlider.Value:F0} мс";
 }
