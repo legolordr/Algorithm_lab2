@@ -18,22 +18,72 @@
                             <TextBlock Classes="label" Text="Фрактал" />
                             <ListBox x:Name="FractalList" AutomationProperties.Name="Фрактал" />
                         </StackPanel>
+                        <StackPanel Spacing="4">
+                            <TextBlock Classes="label" Text="Режим" />
+                            <RadioButton x:Name="FinishedRadio" GroupName="FractalMode" Content="Готовая фигура"
+                                         IsChecked="True" />
+                            <RadioButton x:Name="StepRadio" GroupName="FractalMode" Content="Пошаговое построение" />
+                        </StackPanel>
                         <StackPanel Spacing="2">
                             <controls:StatRow x:Name="DepthRow" Label="Глубина рекурсии" />
                             <Slider x:Name="DepthSlider" Minimum="0" TickFrequency="1" IsSnapToTickEnabled="True"
                                     AutomationProperties.Name="Глубина рекурсии" />
                         </StackPanel>
+                        <StackPanel x:Name="SpeedPanel" Spacing="2" IsVisible="False">
+                            <controls:StatRow x:Name="SpeedRow" Label="Скорость" />
+                            <Slider x:Name="SpeedSlider" Minimum="1" Maximum="20" Value="2"
+                                    AutomationProperties.Name="Скорость" />
+                        </StackPanel>
                     </StackPanel>
                 </Border>
 
-                <Border Classes="card">
+                <!-- Step-by-step mode: one recursive split per step. -->
+                <StackPanel x:Name="StepPanel" Spacing="12" IsVisible="False">
+                    <Border Classes="card">
+                        <StackPanel Spacing="8">
+                            <Button x:Name="PlayButton" Content="Старт" Classes="accent wide" ToolTip.Tip="Пробел" />
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                                <Button x:Name="StepButton" Content="Шаг" Classes="wide" ToolTip.Tip="→" />
+                                <Button Grid.Column="1" x:Name="ResetButton" Content="Сначала" Classes="wide"
+                                        ToolTip.Tip="R" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Classes="card">
+                        <StackPanel Spacing="8">
+                            <TextBlock Classes="section" Text="СОСТОЯНИЕ" />
+                            <controls:StatRow x:Name="ProgressRow" Label="Делений отрезка" />
+                            <ProgressBar x:Name="Progress" />
+                            <controls:StatRow x:Name="SegmentsNowRow" Label="Отрезков сейчас" />
+                            <controls:StatRow x:Name="LevelRow" Label="Уровень рекурсии" />
+                            <TextBlock x:Name="StepText" Classes="status" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Classes="card">
+                        <StackPanel Spacing="8">
+                            <TextBlock Classes="section" Text="ОБОЗНАЧЕНИЯ" />
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <Border Classes="swatch" Background="{DynamicResource VizCompareBrush}" />
+                                <TextBlock Classes="hint" Text="отрезок, который делим на 3 части" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <Border Classes="swatch" Background="{DynamicResource VizWriteBrush}" />
+                                <TextBlock Classes="hint" Text="две новые стороны зубца" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <Border x:Name="DescriptionCard" Classes="card">
                     <StackPanel Spacing="8">
                         <TextBlock Classes="section" Text="КАК СТРОИТСЯ" />
                         <TextBlock x:Name="DescriptionText" Classes="status" />
                     </StackPanel>
                 </Border>
 
-                <Border Classes="card">
+                <Border x:Name="StatsCard" Classes="card">
                     <StackPanel Spacing="8">
                         <TextBlock Classes="section" Text="СТАТИСТИКА" />
                         <controls:StatRow x:Name="CallsStat" Label="Рекурсивных вызовов" />
@@ -45,7 +95,11 @@
         </ScrollViewer>
 
         <Border Grid.Row="1" Grid.Column="1" Classes="canvas">
-            <controls:FractalCanvas x:Name="Canvas" Margin="16" AutomationProperties.Name="Изображение фрактала" />
+            <Panel Margin="16">
+                <controls:FractalCanvas x:Name="Canvas" AutomationProperties.Name="Изображение фрактала" />
+                <controls:KochStepCanvas x:Name="StepCanvas" IsVisible="False"
+                                         AutomationProperties.Name="Пошаговое построение снежинки Коха" />
+            </Panel>
         </Border>
     </Grid>
 </UserControl>

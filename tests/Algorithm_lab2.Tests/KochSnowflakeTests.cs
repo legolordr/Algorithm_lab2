@@ -84,6 +84,50 @@ public class KochSnowflakeTests
         });
     }
 
+    [Theory]
+    [InlineData(0, 0)]
+    [InlineData(1, 3)]
+    [InlineData(2, 15)]
+    [InlineData(4, 255)]
+    public void Trace_HasOneSplitPerNonBaseCall(int depth, int splits)
+    {
+        var fractal = new KochSnowflake();
+
+        // All calls minus the base ones (one per final segment): 4^(d+1) - 1 - 3·4^d = 4^d - 1.
+        Assert.Equal(splits, fractal.Trace(Area, depth).Splits.Count);
+        Assert.Equal(splits, fractal.Build(Area, depth).Calls - 3 * (int)Math.Pow(4, depth));
+    }
+
+    [Theory]
+    [InlineData(1)]
+    [InlineData(3)]
+    public void ReplayingSplits_GivesTheSameSnowflakeAsBuild(int depth)
+    {
+        var fractal = new KochSnowflake();
+        var trace = fractal.Trace(Area, depth);
+        var figure = trace.Triangle.ToList();
+
+        foreach (var split in trace.Splits)
+        {
+            var index = figure.IndexOf(split.A);
+            Assert.Equal(split.B, figure[(index + 1) % figure.Count]);
+            figure.InsertRange(index + 1, [split.P1, split.Peak, split.P3]);
+        }
+
+        Assert.Equal(fractal.Build(Area, depth).Shapes[0].Points, figure);
+    }
+
+    [Fact]
+    public void Trace_StartsWithTheFirstSideAtFullDepth()
+    {
+        var trace = new KochSnowflake().Trace(Area, 3);
+        var first = trace.Splits[0];
+
+        Assert.Equal((trace.Triangle[0], trace.Triangle[1], 3), (first.A, first.B, first.Depth));
+        // Recursion goes depth-first: the next split works on the first quarter of that side.
+        Assert.Equal((first.A, first.P1, 2), (trace.Splits[1].A, trace.Splits[1].B, trace.Splits[1].Depth));
+    }
+
     private static IEnumerable<(Point From, Point To)> Sides(Point[] points) =>
         points.Select((p, i) => (p, points[(i + 1) % points.Length]));
 
