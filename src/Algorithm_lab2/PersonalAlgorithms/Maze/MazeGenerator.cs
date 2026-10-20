@@ -44,7 +44,6 @@ public static class MazeGenerator
 
         var visited = new bool[width, height];
         var steps = new List<MazeStep>(width * height * 2);
-        var buffer = new (Direction Dir, int Dx, int Dy)[4];
         int calls = 0;
         int maxDepth = 0;
 
@@ -56,14 +55,16 @@ public static class MazeGenerator
             visited[x, y] = true;
             steps.Add(new MazeStep(MazeStepKind.Enter, x, y, from));
 
-            Array.Copy(Deltas, buffer, 4);
+            // Each call needs its own shuffled order: the recursive calls below run while this loop is
+            // still going, and a shared array would let them overwrite the directions it has not tried yet.
+            var order = ((Direction Dir, int Dx, int Dy)[])Deltas.Clone();
             for (int i = 3; i > 0; i--)
             {
                 int j = rng.Next(i + 1);
-                (buffer[i], buffer[j]) = (buffer[j], buffer[i]);
+                (order[i], order[j]) = (order[j], order[i]);
             }
 
-            foreach (var (dir, dx, dy) in buffer)
+            foreach (var (dir, dx, dy) in order)
             {
                 int nx = x + dx;
                 int ny = y + dy;
